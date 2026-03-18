@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  username     String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  memberships  RoomMember[]
+  swipes       Swipe[]
+}
+
+model Room {
+  id                  String   @id @default(cuid())
+  code                String   @unique
+  createdAt           DateTime @default(now())
+  genreIds             Int[]    @default([])
+  referenceMovieIds    String[] @default([])
+  referenceMovieTitles String[] @default([])
+  members             RoomMember[]
+  swipes              Swipe[]
+  matches             Match[]
+}
+
+model RoomMember {
+  roomId String
+  userId String
+  room   Room @relation(fields: [roomId], references: [id])
+  user   User @relation(fields: [userId], references: [id])
+  @@id([roomId, userId])
+}
+
+model Swipe {
+  id        String   @id @default(cuid())
+  userId    String
+  roomId    String
+  movieId   String
+  direction String
+  createdAt DateTime @default(now())
+  user      User @relation(fields: [userId], references: [id])
+  room      Room @relation(fields: [roomId], references: [id])
+  @@unique([userId, roomId, movieId])
+}
+
+model Match {
+  id        String   @id @default(cuid())
+  roomId    String
+  movieId   String
+  title     String
+  posterUrl String
+  matchedAt DateTime @default(now())
+  room      Room @relation(fields: [roomId], references: [id])
+}

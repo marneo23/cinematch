@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+backend/.env
+frontend/.env.local
+frontend/.env
+
+# Build output
+frontend/dist/
+backend/dist/
+
+# Prisma generated client
+backend/node_modules/
+
+# Claude / editor settings
+backend/.claude/
+.claude/
+
+# Learning material (not part of the project)
+learning (for claude)/
+
+# OS
+.DS_Store
+Thumbs.db
