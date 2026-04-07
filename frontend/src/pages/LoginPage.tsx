@@ -36,7 +36,7 @@ export default function LoginPage() {
         className="w-full max-w-md"
       >
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-black gradient-text mb-2">🎬 CineMatch</h1>
+          <h1 className="text-5xl font-black gradient-text mb-2">CineMatch</h1>
           <p className="text-gray-400 text-sm">Find movies you'll both love</p>
         </div>
 

@@ -51,7 +51,7 @@ export default function MatchHistory({ roomId, isOpen, onClose }: MatchHistoryPr
           >
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-xl font-bold">
-                ❤️ Matches{' '}
+                Matches{' '}
                 {matches.length > 0 && (
                   <span className="text-sm font-normal text-gray-400">({matches.length})</span>
                 )}
@@ -70,7 +70,6 @@ export default function MatchHistory({ roomId, isOpen, onClose }: MatchHistoryPr
               </div>
             ) : matches.length === 0 ? (
               <div className="text-center py-10 text-gray-500">
-                <p className="text-3xl mb-2">🍿</p>
                 <p className="font-medium">No matches yet</p>
                 <p className="text-sm mt-1">Keep swiping to find movies you both like!</p>
               </div>
@@ -85,9 +84,7 @@ export default function MatchHistory({ roomId, isOpen, onClose }: MatchHistoryPr
                         className="w-full h-40 object-cover"
                       />
                     ) : (
-                      <div className="w-full h-40 bg-gray-800 flex items-center justify-center">
-                        <span className="text-3xl">🎬</span>
-                      </div>
+                      <div className="w-full h-40 bg-gray-800" />
                     )}
                     <div className="p-2">
                       <p className="text-xs font-semibold leading-tight line-clamp-2">{match.title}</p>

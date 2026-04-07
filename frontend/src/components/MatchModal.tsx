@@ -56,15 +56,6 @@ export default function MatchModal({ match, onDismiss }: MatchModalProps) {
             />
 
             <div className="relative glass rounded-3xl p-8 overflow-hidden">
-              <motion.p
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="text-5xl mb-2"
-              >
-                🎉
-              </motion.p>
-
               <motion.h2
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -97,9 +88,7 @@ export default function MatchModal({ match, onDismiss }: MatchModalProps) {
                     className="w-36 h-52 object-cover rounded-xl mx-auto card-shadow"
                   />
                 ) : (
-                  <div className="w-36 h-52 bg-gray-800 rounded-xl mx-auto flex items-center justify-center">
-                    <span className="text-4xl">🎬</span>
-                  </div>
+                  <div className="w-36 h-52 bg-gray-800 rounded-xl mx-auto" />
                 )}
               </motion.div>
 

@@ -124,8 +124,11 @@ export default function MovieDetailSheet({ movie, onClose }: MovieDetailSheetPro
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-xl">
-                              👤
+                            <div className="w-full h-full flex items-center justify-center">
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-600">
+                                <circle cx="12" cy="8" r="4"/>
+                                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                              </svg>
                             </div>
                           )}
                         </div>

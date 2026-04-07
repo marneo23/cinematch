@@ -65,7 +65,7 @@ export default function LobbyPage() {
         className="w-full max-w-md"
       >
         <div className="text-center mb-10">
-          <h1 className="text-5xl font-black gradient-text mb-2">🎬 CineMatch</h1>
+          <h1 className="text-5xl font-black gradient-text mb-2">CineMatch</h1>
           <p className="text-gray-400">Swipe together, watch together</p>
         </div>
 
@@ -112,7 +112,7 @@ export default function LobbyPage() {
                   className="w-full py-3 rounded-xl font-bold text-white transition-all duration-200 disabled:opacity-50"
                   style={{ background: 'linear-gradient(135deg, #FF6B9D, #FF4458)' }}
                 >
-                  {loading ? 'Creating...' : '✨ Create New Room'}
+                  {loading ? 'Creating...' : 'Create New Room'}
                 </button>
               </div>
             ) : (
@@ -134,7 +134,7 @@ export default function LobbyPage() {
                   className="w-full py-3 rounded-xl font-bold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ background: 'linear-gradient(135deg, #FF6B9D, #FF4458)' }}
                 >
-                  {loading ? 'Joining...' : '🚀 Join Room'}
+                  {loading ? 'Joining...' : 'Join Room'}
                 </button>
               </form>
             )}

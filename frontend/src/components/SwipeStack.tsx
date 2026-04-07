@@ -90,7 +90,6 @@ export default function SwipeStack({ movies, onSwipe, onNeedMore, loading }: Swi
           </div>
         ) : (
           <div className="text-center text-gray-400">
-            <p className="text-4xl mb-3">🎬</p>
             <p className="font-medium">No more movies!</p>
             <p className="text-sm mt-1">Check back later for more.</p>
           </div>

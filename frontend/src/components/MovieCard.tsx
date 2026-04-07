@@ -25,9 +25,7 @@ export default function MovieCard({ movie, style, className = '', onExpand }: Mo
           draggable={false}
         />
       ) : (
-        <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-          <span className="text-6xl">🎬</span>
-        </div>
+        <div className="w-full h-full bg-gray-800" />
       )}
 
       {/* Gradient overlay */}
