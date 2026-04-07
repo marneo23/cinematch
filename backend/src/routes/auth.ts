@@ -20,7 +20,7 @@ router.post('/session', async (req: Request, res: Response): Promise<void> => {
   const token = jwt.sign(
     { userId: user.id, username: user.username },
     process.env.JWT_SECRET!,
-    { expiresIn: '8h' }
+    { expiresIn: '2h' }
   );
 
   res.status(201).json({ token, user });
