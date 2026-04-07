@@ -14,7 +14,7 @@ import genreRoutes from './routes/genres';
 const app = express();
 const httpServer = createServer(app);
 
-const FRONTEND_URL = process.env.FRONTEND_URL ?? 'http://localhost:5173';
+const FRONTEND_URL = (process.env.FRONTEND_URL ?? 'http://localhost:5173').replace(/\/$/, '');
 
 const io = new Server(httpServer, {
   cors: {
