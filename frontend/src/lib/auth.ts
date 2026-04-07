@@ -1,9 +1,8 @@
-const TOKEN_KEY = 'tinder_movies_token';
-const USER_KEY = 'tinder_movies_user';
+const TOKEN_KEY = 'cinematch_token';
+const USER_KEY = 'cinematch_user';
 
 export interface StoredUser {
   id: string;
-  email: string;
   username: string;
 }
 

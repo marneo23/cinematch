@@ -1,13 +1,12 @@
 import { useState, FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import api from '../lib/api';
 import { setToken, setUser } from '../lib/auth';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -17,12 +16,12 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await api.post('/auth/login', { email, password });
+      const res = await api.post('/auth/session', { username });
       setToken(res.data.token);
       setUser(res.data.user);
       navigate('/lobby');
     } catch (err: any) {
-      setError(err.response?.data?.error ?? 'Login failed. Please try again.');
+      setError(err.response?.data?.error ?? 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -36,14 +35,14 @@ export default function LoginPage() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        {/* Logo */}
         <div className="text-center mb-8">
           <h1 className="text-5xl font-black gradient-text mb-2">🎬 CineMatch</h1>
           <p className="text-gray-400 text-sm">Find movies you'll both love</p>
         </div>
 
         <div className="glass rounded-2xl p-8">
-          <h2 className="text-2xl font-bold mb-6">Sign in</h2>
+          <h2 className="text-2xl font-bold mb-2">What's your name?</h2>
+          <p className="text-gray-400 text-sm mb-6">No account needed — just jump in.</p>
 
           {error && (
             <div className="bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg p-3 mb-4 text-sm">
@@ -53,26 +52,16 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Email</label>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
+                minLength={2}
+                maxLength={30}
+                autoFocus
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-brand-pink transition-colors"
-                placeholder="you@example.com"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-brand-pink transition-colors"
-                placeholder="••••••••"
+                placeholder="moviebuff42"
               />
             </div>
 
@@ -82,16 +71,9 @@ export default function LoginPage() {
               className="w-full py-3 rounded-xl font-bold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ background: 'linear-gradient(135deg, #FF6B9D, #FF4458)' }}
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? 'Starting...' : "Let's go"}
             </button>
           </form>
-
-          <p className="text-center text-gray-400 text-sm mt-6">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-brand-pink hover:underline font-medium">
-              Create one
-            </Link>
-          </p>
         </div>
       </motion.div>
     </div>

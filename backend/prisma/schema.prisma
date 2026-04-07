@@ -8,13 +8,11 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  username     String
-  passwordHash String
-  createdAt    DateTime @default(now())
-  memberships  RoomMember[]
-  swipes       Swipe[]
+  id          String   @id @default(cuid())
+  username    String
+  createdAt   DateTime @default(now())
+  memberships RoomMember[]
+  swipes      Swipe[]
 }
 
 model Room {

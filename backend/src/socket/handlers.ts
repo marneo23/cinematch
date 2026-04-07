@@ -4,7 +4,7 @@ import { prisma } from '../lib/prisma';
 
 interface AuthPayload {
   userId: string;
-  email: string;
+  username: string;
 }
 
 export function initSocketHandlers(io: Server): void {
