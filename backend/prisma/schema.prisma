@@ -16,20 +16,20 @@ model User {
 }
 
 model Room {
-  id                  String   @id @default(cuid())
-  code                String   @unique
-  createdAt           DateTime @default(now())
-  genreIds             Int[]    @default([])
-  referenceMovieIds    String[] @default([])
-  referenceMovieTitles String[] @default([])
-  members             RoomMember[]
-  swipes              Swipe[]
-  matches             Match[]
+  id        String   @id @default(cuid())
+  code      String   @unique
+  createdAt DateTime @default(now())
+  members   RoomMember[]
+  swipes    Swipe[]
+  matches   Match[]
 }
 
 model RoomMember {
-  roomId String
-  userId String
+  roomId               String
+  userId               String
+  genreIds             Int[]    @default([])
+  referenceMovieIds    String[] @default([])
+  referenceMovieTitles String[] @default([])
   room   Room @relation(fields: [roomId], references: [id])
   user   User @relation(fields: [userId], references: [id])
   @@id([roomId, userId])

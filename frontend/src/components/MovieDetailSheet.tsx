@@ -99,7 +99,7 @@ export default function MovieDetailSheet({ movie, onClose }: MovieDetailSheetPro
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-500 transition-colors text-white text-sm font-semibold mb-5"
                 >
-                  <span>▶</span> Ver trailer
+                  <span>▶</span> Watch trailer
                 </a>
               )}
 
@@ -111,7 +111,7 @@ export default function MovieDetailSheet({ movie, onClose }: MovieDetailSheetPro
               ) : cast.length > 0 ? (
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                    Reparto
+                    Cast
                   </p>
                   <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
                     {cast.map((member) => (

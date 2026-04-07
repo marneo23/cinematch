@@ -10,13 +10,18 @@ import MatchModal from '../components/MatchModal';
 import MatchHistory from '../components/MatchHistory';
 import PreferencesPanel from '../components/PreferencesPanel';
 
-interface RoomData {
-  id: string;
-  code: string;
+interface RoomMemberData {
+  userId: string;
+  user: { id: string; username: string };
   genreIds: number[];
   referenceMovieIds: string[];
   referenceMovieTitles: string[];
-  members: Array<{ userId: string; user: { id: string; username: string } }>;
+}
+
+interface RoomData {
+  id: string;
+  code: string;
+  members: RoomMemberData[];
   matches: Array<{ id: string }>;
 }
 
@@ -73,18 +78,27 @@ export default function RoomPage() {
     setPartnerOnline(false);
   }, []);
 
+  const handlePreferencesUpdated = useCallback(({ updatedBy }: { updatedBy: string }) => {
+    // When the partner updates their preferences, reset our movie queue
+    if (updatedBy !== currentUser?.id) {
+      reset();
+    }
+  }, [currentUser?.id, reset]);
+
   useSocket({
     roomId: roomId ?? '',
     onMatch: handleMatch,
     onPartnerConnected: handlePartnerConnected,
     onPartnerDisconnected: handlePartnerDisconnected,
+    onPreferencesUpdated: handlePreferencesUpdated,
   });
 
-  // Auto-show preferences panel when both members are present and no preferences are set
+  // Auto-show preferences panel when both members are present and current user has no preferences set
   useEffect(() => {
     if (!room) return;
     const bothPresent = room.members.length >= 2;
-    const noPreferences = room.genreIds.length === 0 && room.referenceMovieIds.length === 0;
+    const myMember = room.members.find((m) => m.userId === currentUser?.id);
+    const noPreferences = (myMember?.genreIds.length ?? 0) === 0 && (myMember?.referenceMovieIds.length ?? 0) === 0;
     if (bothPresent && noPreferences) {
       setShowPreferences(true);
     }
@@ -189,7 +203,7 @@ export default function RoomPage() {
           <button
             onClick={() => setShowPreferences(true)}
             className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors text-base"
-            title="Preferencias"
+            title="Preferences"
           >
             ⚙
           </button>
@@ -259,16 +273,21 @@ export default function RoomPage() {
         onClose={() => setShowHistory(false)}
       />
 
-      {/* Preferences panel */}
-      <PreferencesPanel
-        roomId={roomId ?? ''}
-        isOpen={showPreferences}
-        initialGenreIds={room?.genreIds ?? []}
-        initialReferenceMovieIds={room?.referenceMovieIds ?? []}
-        initialReferenceMovieTitles={room?.referenceMovieTitles ?? []}
-        onClose={() => setShowPreferences(false)}
-        onSaved={handlePreferencesSaved}
-      />
+      {/* Preferences panel — initialized with the current user's own selections */}
+      {(() => {
+        const myMember = room?.members.find((m) => m.userId === currentUser?.id);
+        return (
+          <PreferencesPanel
+            roomId={roomId ?? ''}
+            isOpen={showPreferences}
+            initialGenreIds={myMember?.genreIds ?? []}
+            initialReferenceMovieIds={myMember?.referenceMovieIds ?? []}
+            initialReferenceMovieTitles={myMember?.referenceMovieTitles ?? []}
+            onClose={() => setShowPreferences(false)}
+            onSaved={handlePreferencesSaved}
+          />
+        );
+      })()}
     </div>
   );
 }

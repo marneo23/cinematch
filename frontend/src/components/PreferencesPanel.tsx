@@ -155,7 +155,7 @@ export default function PreferencesPanel({
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-xl font-bold">Preferencias</h2>
+              <h2 className="text-xl font-bold">Preferences</h2>
               <button
                 onClick={onClose}
                 className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
@@ -167,10 +167,10 @@ export default function PreferencesPanel({
             {/* Reference movie search */}
             <div className="mb-6">
               <p className="text-sm font-semibold text-gray-300 mb-1">
-                Peliculas de referencia
+                Reference movies
               </p>
               <p className="text-xs text-gray-500 mb-3">
-                Agrega una o mas peliculas para ver recomendaciones similares.
+                Add one or more movies to see similar recommendations.
               </p>
 
               {/* Selected movies chips */}
@@ -196,7 +196,7 @@ export default function PreferencesPanel({
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Buscar pelicula..."
+                  placeholder="Search movie..."
                   value={searchQuery}
                   onChange={(e) => handleSearchChange(e.target.value)}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm placeholder-gray-500 focus:outline-none focus:border-brand-pink/50 transition-colors"
@@ -235,10 +235,10 @@ export default function PreferencesPanel({
             {/* Genre chips */}
             <div className="mb-6">
               <p className="text-sm font-semibold text-gray-300 mb-1">
-                Generos
+                Genres
               </p>
               <p className="text-xs text-gray-500 mb-3">
-                Se usan si no hay peliculas de referencia seleccionadas.
+                Used if no reference movies are selected.
               </p>
               {genres.length === 0 ? (
                 <div className="flex justify-center py-4">
@@ -277,14 +277,14 @@ export default function PreferencesPanel({
                 disabled={!hasPreferences && !searchQuery}
                 className="flex-1 py-2.5 rounded-xl border border-white/10 text-sm font-medium text-gray-400 hover:text-white hover:border-white/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                Limpiar
+                Clear
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving}
                 className="flex-[2] py-2.5 rounded-xl bg-brand-pink text-white text-sm font-semibold hover:bg-brand-pink/90 transition-colors disabled:opacity-60"
               >
-                {saving ? 'Guardando...' : 'Guardar'}
+                {saving ? 'Saving...' : 'Save'}
               </button>
             </div>
           </motion.div>

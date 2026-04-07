@@ -81,18 +81,23 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  // Verify membership and load room preferences
+  // Verify membership and load all members' preferences
   const room = await prisma.room.findUnique({
     where: { id: roomId },
-    include: { members: { where: { userId } } },
+    include: { members: true },
   });
 
-  if (!room || room.members.length === 0) {
+  const isMember = room?.members.some((m) => m.userId === userId);
+  if (!room || !isMember) {
     res.status(403).json({ error: 'You are not a member of this room' });
     return;
   }
 
   const pageNum = parseInt(typeof page === 'string' ? page : '1', 10) || 1;
+
+  // Aggregate preferences from all members (union)
+  const allReferenceMovieIds = [...new Set(room.members.flatMap((m) => m.referenceMovieIds))];
+  const allGenreIds = [...new Set(room.members.flatMap((m) => m.genreIds))];
 
   // Get all movieIds already swiped by this user in this room
   const swipedMovies = await prisma.swipe.findMany({
@@ -101,12 +106,12 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
   });
   const swipedIds = new Set(swipedMovies.map((s) => s.movieId));
 
-  // Choose fetch strategy based on room preferences
+  // Choose fetch strategy based on combined preferences
   const fetchPage = async (tmdbPage: number): Promise<TMDBMovie[]> => {
-    if (room.referenceMovieIds.length > 0) {
+    if (allReferenceMovieIds.length > 0) {
       // Fetch recommendations for all reference movies in parallel, then merge + deduplicate
       const allResults = await Promise.all(
-        room.referenceMovieIds.map((id) => fetchRecommendations(id, tmdbPage).catch(() => [] as TMDBMovie[]))
+        allReferenceMovieIds.map((id) => fetchRecommendations(id, tmdbPage).catch(() => [] as TMDBMovie[]))
       );
       const seen = new Set<number>();
       const merged: TMDBMovie[] = [];
@@ -121,8 +126,8 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
         }
       }
       return merged;
-    } else if (room.genreIds.length > 0) {
-      return discoverMovies(room.genreIds, tmdbPage);
+    } else if (allGenreIds.length > 0) {
+      return discoverMovies(allGenreIds, tmdbPage);
     } else {
       return fetchPopularMovies(tmdbPage);
     }

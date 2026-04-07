@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { nanoid } from 'nanoid';
+import { Server } from 'socket.io';
 import { prisma } from '../lib/prisma';
 import { authMiddleware, AuthRequest } from '../middleware/auth';
 
@@ -76,7 +77,7 @@ router.post('/join', async (req: Request, res: Response): Promise<void> => {
   res.json(updatedRoom);
 });
 
-// PATCH /rooms/:id/preferences — update genre/reference movie preferences
+// PATCH /rooms/:id/preferences — update the requesting user's preferences for this room
 router.patch('/:id/preferences', async (req: Request, res: Response): Promise<void> => {
   const { userId } = (req as AuthRequest).user;
   const { id } = req.params;
@@ -90,22 +91,20 @@ router.patch('/:id/preferences', async (req: Request, res: Response): Promise<vo
     return;
   }
 
-  const updated = await prisma.room.update({
-    where: { id },
+  await prisma.roomMember.update({
+    where: { roomId_userId: { roomId: id, userId } },
     data: {
       genreIds: Array.isArray(genreIds) ? genreIds : [],
       referenceMovieIds: Array.isArray(referenceMovieIds) ? referenceMovieIds : [],
       referenceMovieTitles: Array.isArray(referenceMovieTitles) ? referenceMovieTitles : [],
     },
-    select: {
-      id: true,
-      genreIds: true,
-      referenceMovieIds: true,
-      referenceMovieTitles: true,
-    },
   });
 
-  res.json(updated);
+  // Notify everyone in the room so the partner resets their movie queue
+  const io: Server = (req as any).io;
+  io.to(id).emit('preferences-updated', { updatedBy: userId });
+
+  res.json({ ok: true });
 });
 
 // GET /rooms/:id — get room details

@@ -65,7 +65,7 @@ export default function MovieCard({ movie, style, className = '', onExpand }: Mo
                 onExpand();
               }}
               className="shrink-0 w-8 h-8 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center text-white/80 hover:bg-white/25 hover:text-white transition-colors mb-0.5"
-              title="Ver más"
+              title="More info"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"/>

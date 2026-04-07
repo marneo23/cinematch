@@ -35,7 +35,7 @@ export async function fetchPopularMovies(page: number = 1): Promise<TMDBMovie[]>
     params: {
       api_key: getApiKey(),
       page,
-      language: 'es-ES',
+      language: 'en-US',
     },
   });
 
@@ -50,7 +50,7 @@ export async function fetchMovieDetails(movieId: number): Promise<TMDBMovieDetai
   const response = await axios.get(`${TMDB_BASE}/movie/${movieId}`, {
     params: {
       api_key: getApiKey(),
-      language: 'es-ES',
+      language: 'en-US',
     },
   });
   return response.data as TMDBMovieDetails;
@@ -65,7 +65,7 @@ export async function fetchGenres(): Promise<TMDBGenre[]> {
   const response = await axios.get(`${TMDB_BASE}/genre/movie/list`, {
     params: {
       api_key: getApiKey(),
-      language: 'es-ES',
+      language: 'en-US',
     },
   });
   const genres = response.data?.genres;
@@ -79,7 +79,7 @@ export async function discoverMovies(genreIds: number[], page: number = 1): Prom
   const response = await axios.get(`${TMDB_BASE}/discover/movie`, {
     params: {
       api_key: getApiKey(),
-      language: 'es-ES',
+      language: 'en-US',
       page,
       with_genres: genreIds.join('|'),
     },
@@ -95,7 +95,7 @@ export async function fetchRecommendations(movieId: string, page: number = 1): P
   const response = await axios.get(`${TMDB_BASE}/movie/${movieId}/recommendations`, {
     params: {
       api_key: getApiKey(),
-      language: 'es-ES',
+      language: 'en-US',
       page,
     },
   });
@@ -116,7 +116,7 @@ export async function searchMovies(query: string): Promise<TMDBSearchResult[]> {
   const response = await axios.get(`${TMDB_BASE}/search/movie`, {
     params: {
       api_key: getApiKey(),
-      language: 'es-ES',
+      language: 'en-US',
       query,
     },
   });
@@ -151,17 +151,8 @@ export interface TMDBVideo {
 }
 
 export async function fetchMovieVideos(movieId: string): Promise<TMDBVideo[]> {
-  // Try Spanish first, fall back to English for trailers
-  const [esRes, enRes] = await Promise.all([
-    axios.get(`${TMDB_BASE}/movie/${movieId}/videos`, {
-      params: { api_key: getApiKey(), language: 'es-ES' },
-    }),
-    axios.get(`${TMDB_BASE}/movie/${movieId}/videos`, {
-      params: { api_key: getApiKey(), language: 'en-US' },
-    }),
-  ]);
-  const esVideos: TMDBVideo[] = Array.isArray(esRes.data?.results) ? esRes.data.results : [];
-  const enVideos: TMDBVideo[] = Array.isArray(enRes.data?.results) ? enRes.data.results : [];
-  // Prefer Spanish trailers, fall back to English
-  return [...esVideos, ...enVideos];
+  const response = await axios.get(`${TMDB_BASE}/movie/${movieId}/videos`, {
+    params: { api_key: getApiKey(), language: 'en-US' },
+  });
+  return Array.isArray(response.data?.results) ? response.data.results : [];
 }

@@ -17,18 +17,21 @@ interface UseSocketOptions {
   onMatch: (data: MatchEvent) => void;
   onPartnerConnected?: (data: { userId: string }) => void;
   onPartnerDisconnected?: (data: { userId: string }) => void;
+  onPreferencesUpdated?: (data: { updatedBy: string }) => void;
 }
 
-export function useSocket({ roomId, onMatch, onPartnerConnected, onPartnerDisconnected }: UseSocketOptions) {
+export function useSocket({ roomId, onMatch, onPartnerConnected, onPartnerDisconnected, onPreferencesUpdated }: UseSocketOptions) {
   const socketRef = useRef<Socket | null>(null);
 
   // Stable callback refs to avoid re-subscribing
   const onMatchRef = useRef(onMatch);
   const onPartnerConnectedRef = useRef(onPartnerConnected);
   const onPartnerDisconnectedRef = useRef(onPartnerDisconnected);
+  const onPreferencesUpdatedRef = useRef(onPreferencesUpdated);
   onMatchRef.current = onMatch;
   onPartnerConnectedRef.current = onPartnerConnected;
   onPartnerDisconnectedRef.current = onPartnerDisconnected;
+  onPreferencesUpdatedRef.current = onPreferencesUpdated;
 
   useEffect(() => {
     const token = getToken();
@@ -55,6 +58,10 @@ export function useSocket({ roomId, onMatch, onPartnerConnected, onPartnerDiscon
 
     socket.on('partner-disconnected', (data: { userId: string }) => {
       onPartnerDisconnectedRef.current?.(data);
+    });
+
+    socket.on('preferences-updated', (data: { updatedBy: string }) => {
+      onPreferencesUpdatedRef.current?.(data);
     });
 
     socket.on('connect_error', (err) => {
