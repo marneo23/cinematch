@@ -12,18 +12,23 @@ router.post('/session', async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  const user = await prisma.user.create({
-    data: { username: username.trim() },
-    select: { id: true, username: true, createdAt: true },
-  });
+  try {
+    const user = await prisma.user.create({
+      data: { username: username.trim() },
+      select: { id: true, username: true, createdAt: true },
+    });
 
-  const token = jwt.sign(
-    { userId: user.id, username: user.username },
-    process.env.JWT_SECRET!,
-    { expiresIn: '2h' }
-  );
+    const token = jwt.sign(
+      { userId: user.id, username: user.username },
+      process.env.JWT_SECRET!,
+      { expiresIn: '2h' }
+    );
 
-  res.status(201).json({ token, user });
+    res.status(201).json({ token, user });
+  } catch (err) {
+    console.error('Auth error:', err);
+    res.status(500).json({ error: 'Could not create session. Please try again.' });
+  }
 });
 
 export default router;
