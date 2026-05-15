@@ -14,6 +14,7 @@ export interface Movie {
 export function useMovies(roomId: string) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(false);
+  const [initialized, setInitialized] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const pageRef = useRef(1);
   const fetchingRef = useRef(false);
@@ -39,6 +40,7 @@ export function useMovies(roomId: string) {
       setError(err.response?.data?.error ?? 'Failed to load movies');
     } finally {
       setLoading(false);
+      setInitialized(true);
       fetchingRef.current = false;
     }
   }, [roomId]);
@@ -49,8 +51,9 @@ export function useMovies(roomId: string) {
 
   const reset = useCallback(() => {
     setMovies([]);
+    setInitialized(false);
     pageRef.current = 1;
   }, []);
 
-  return { movies, loading, error, fetchMovies, removeTop, reset };
+  return { movies, loading, initialized, error, fetchMovies, removeTop, reset };
 }

@@ -39,7 +39,7 @@ export default function RoomPage() {
   const [partnerOnline, setPartnerOnline] = useState(false);
   const [codeCopied, setCodeCopied] = useState(false);
 
-  const { movies, loading, fetchMovies, removeTop, reset } = useMovies(roomId ?? '');
+  const { movies, loading, initialized, fetchMovies, removeTop, reset } = useMovies(roomId ?? '');
 
   // Load room data
   useEffect(() => {
@@ -259,6 +259,7 @@ export default function RoomPage() {
               onSwipe={handleSwipe}
               onNeedMore={handleNeedMore}
               loading={loading}
+              initialized={initialized}
             />
           </div>
         )}

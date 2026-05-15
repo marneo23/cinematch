@@ -15,12 +15,13 @@ interface SwipeStackProps {
   onSwipe: (movie: Movie, direction: 'like' | 'dislike') => void;
   onNeedMore: () => void;
   loading: boolean;
+  initialized: boolean;
 }
 
 const SWIPE_THRESHOLD = 100;
 const VISIBLE_CARDS = 3;
 
-export default function SwipeStack({ movies, onSwipe, onNeedMore, loading }: SwipeStackProps) {
+export default function SwipeStack({ movies, onSwipe, onNeedMore, loading, initialized }: SwipeStackProps) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-300, 0, 300], [-25, 0, 25]);
   const opacity = useTransform(x, [-300, -100, 0, 100, 300], [0, 1, 1, 1, 0]);
@@ -83,7 +84,7 @@ export default function SwipeStack({ movies, onSwipe, onNeedMore, loading }: Swi
   if (movies.length === 0) {
     return (
       <div className="flex items-center justify-center h-full">
-        {loading ? (
+        {loading || !initialized ? (
           <div className="text-center text-gray-400">
             <div className="w-12 h-12 border-2 border-brand-pink/30 border-t-brand-pink rounded-full animate-spin mx-auto mb-3" />
             <p className="text-sm">Loading movies...</p>
