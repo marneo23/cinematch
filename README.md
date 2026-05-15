@@ -42,7 +42,6 @@ Backend runs on **http://localhost:3001**
 ```bash
 cd frontend
 cp .env.example .env
-# VITE_API_URL=http://localhost:3001 (already set)
 npm install
 npm run dev
 ```
@@ -59,7 +58,7 @@ Frontend runs on **http://localhost:5173**
 4. User B: joins the room with the code
 5. Both land on the swipe screen
 6. Swipe right (like) on the same movie from both accounts
-7. **"It's a Match!" modal fires on both screens** 🎉
+7. "It's a Match!" modal fires on both screens
 8. Tap the ❤️ icon in the header to see match history
 
 ---
