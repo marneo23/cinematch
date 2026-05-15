@@ -2,6 +2,10 @@
 
 A couples movie-decision app. Two users connect, swipe movies independently, and get a real-time "It's a Match!" notification when both like the same film.
 
+## Demo
+
+[![Watch the demo](https://cdn.loom.com/sessions/thumbnails/c67452ef9f5f4243ad3638f2126593f5-with-play.gif)](https://www.loom.com/share/c67452ef9f5f4243ad3638f2126593f5)
+
 ## Quick Start
 
 ### 1. Prerequisites
