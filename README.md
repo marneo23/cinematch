@@ -1,4 +1,4 @@
-# 🎬 CineMatch — Tinder for Movies
+# CineMatch — Tinder for Movies
 
 A couples movie-decision app. Two users connect, swipe movies independently, and get a real-time "It's a Match!" notification when both like the same film.
 
@@ -6,38 +6,33 @@ A couples movie-decision app. Two users connect, swipe movies independently, and
 
 ### 1. Prerequisites
 - Node.js 18+
-- Docker (for PostgreSQL) or a local PostgreSQL instance
+- PostgreSQL — either local (via Docker) or a free [Neon](https://neon.tech) project
 - A [TMDB API key](https://www.themoviedb.org/settings/api) (free)
 
 ### 2. Start the database
+
+For a local Postgres on port `5433`:
 
 ```bash
 docker-compose up -d
 ```
 
-### 3. Configure the backend
+Or skip this step and point `DATABASE_URL` at a Neon project (see `backend/.env.example` for the connection-string format — use the `-pooler` endpoint to avoid cold-start timeouts).
+
+### 3. Configure & run the backend
 
 ```bash
 cd backend
 cp .env.example .env
-# Edit .env and fill in:
-#   DATABASE_URL (default works with docker-compose)
-#   JWT_SECRET (any random string)
-#   TMDB_API_KEY (from TMDB)
-```
-
-### 4. Install & migrate the backend
-
-```bash
-cd backend
+# Fill in DATABASE_URL, JWT_SECRET, and TMDB_API_KEY
 npm install
-npx prisma migrate dev --name init
+npx prisma migrate deploy
 npm run dev
 ```
 
-Backend runs on **http://localhost:3001**
+Backend runs on **http://localhost:3001**.
 
-### 5. Configure & start the frontend
+### 4. Configure & run the frontend
 
 ```bash
 cd frontend
@@ -46,20 +41,20 @@ npm install
 npm run dev
 ```
 
-Frontend runs on **http://localhost:5173**
+Frontend runs on **http://localhost:5173**.
 
 ---
 
 ## How to Test
 
-1. Open two browser tabs (or two different browsers)
-2. Register two accounts
-3. User A: creates a room → copies the 6-char code
-4. User B: joins the room with the code
-5. Both land on the swipe screen
-6. Swipe right (like) on the same movie from both accounts
-7. "It's a Match!" modal fires on both screens
-8. Tap the ❤️ icon in the header to see match history
+1. Open two browser tabs (or two different browsers).
+2. On each, enter a username — no signup, no password. A short-lived JWT session is issued on the spot.
+3. User A: creates a room and shares the 6-char code.
+4. User B: joins the room with that code.
+5. Both pick their genres and reference movies, then land on the swipe screen.
+6. Swipe right on the same movie from both accounts.
+7. The "It's a Match!" modal fires on both screens in real time.
+8. Tap the heart icon in the header to see match history.
 
 ---
 
@@ -68,15 +63,15 @@ Frontend runs on **http://localhost:5173**
 ```
 cinematch/
 ├── backend/          # Node.js + Express + Socket.io + Prisma
-│   ├── prisma/       # Database schema
+│   ├── prisma/       # Database schema & migrations
 │   └── src/
-│       ├── routes/   # auth, rooms, movies, swipes, matches
+│       ├── routes/   # auth, rooms, movies, swipes, matches, genres
 │       ├── socket/   # Socket.io handlers
 │       ├── middleware/
 │       └── lib/      # Prisma client, TMDB helper
 └── frontend/         # React + Vite + Tailwind + Framer Motion
     └── src/
-        ├── pages/    # Login, Register, Lobby, Room
+        ├── pages/    # Login, Lobby, Room
         ├── components/ # MovieCard, SwipeStack, MatchModal, MatchHistory
         ├── hooks/    # useSocket, useMovies
         └── lib/      # axios instance, auth helpers
@@ -85,6 +80,6 @@ cinematch/
 ## Stack
 - **Frontend**: React 18, Vite, TypeScript, Tailwind CSS, Framer Motion
 - **Backend**: Node.js, Express, Socket.io
-- **Database**: PostgreSQL + Prisma ORM
-- **Auth**: JWT + bcryptjs
+- **Database**: PostgreSQL (local Docker or Neon) + Prisma ORM
+- **Auth**: JWT, passwordless (username-only ephemeral sessions)
 - **Movies**: TMDB API
