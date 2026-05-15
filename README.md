@@ -1,4 +1,4 @@
-# CineMatch — Tinder for Movies
+# CineMatch
 
 A couples movie-decision app. Two users connect, swipe movies independently, and get a real-time "It's a Match!" notification when both like the same film.
 
