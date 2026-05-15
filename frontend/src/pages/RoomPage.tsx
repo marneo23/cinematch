@@ -163,7 +163,10 @@ export default function RoomPage() {
   }
 
   const partner = room?.members.find((m) => m.userId !== currentUser?.id);
+  const myMember = room?.members.find((m) => m.userId === currentUser?.id);
   const waitingForPartner = room && room.members.length < 2;
+  const hasOwnPreferences =
+    (myMember?.genreIds.length ?? 0) > 0 || (myMember?.referenceMovieIds.length ?? 0) > 0;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -251,6 +254,25 @@ export default function RoomPage() {
               {codeCopied ? '✓ Copied to clipboard!' : 'Tap to copy'}
             </p>
           </motion.div>
+        ) : !hasOwnPreferences ? (
+          /* Preferences not set yet — hold off on recommendations */
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center max-w-sm"
+          >
+            <h2 className="text-xl font-bold mb-2">Set your preferences</h2>
+            <p className="text-gray-400 text-sm mb-6">
+              Pick a few genres or reference movies so we can recommend films you'll both love.
+            </p>
+            <button
+              onClick={() => setShowPreferences(true)}
+              className="py-3 px-6 rounded-xl font-semibold text-white transition-all duration-200"
+              style={{ background: 'linear-gradient(135deg, #FF6B9D, #FF4458)' }}
+            >
+              Open preferences
+            </button>
+          </motion.div>
         ) : (
           /* Swipe stack */
           <div className="w-full max-w-sm" style={{ height: '520px', paddingBottom: '64px' }}>
@@ -279,20 +301,15 @@ export default function RoomPage() {
       />
 
       {/* Preferences panel — initialized with the current user's own selections */}
-      {(() => {
-        const myMember = room?.members.find((m) => m.userId === currentUser?.id);
-        return (
-          <PreferencesPanel
-            roomId={roomId ?? ''}
-            isOpen={showPreferences}
-            initialGenreIds={myMember?.genreIds ?? []}
-            initialReferenceMovieIds={myMember?.referenceMovieIds ?? []}
-            initialReferenceMovieTitles={myMember?.referenceMovieTitles ?? []}
-            onClose={() => setShowPreferences(false)}
-            onSaved={handlePreferencesSaved}
-          />
-        );
-      })()}
+      <PreferencesPanel
+        roomId={roomId ?? ''}
+        isOpen={showPreferences}
+        initialGenreIds={myMember?.genreIds ?? []}
+        initialReferenceMovieIds={myMember?.referenceMovieIds ?? []}
+        initialReferenceMovieTitles={myMember?.referenceMovieTitles ?? []}
+        onClose={() => setShowPreferences(false)}
+        onSaved={handlePreferencesSaved}
+      />
     </div>
   );
 }
